@@ -1,0 +1,17 @@
+// cmake generated file
+
+
+#define TRL_DX11 @TRL_DX11@
+#define TRL_OPENGL @TRL_OPENGL@
+#define TRL_OPENGLES @TRL_OPENGLES@
+
+#define TRL_RENDER_API @TRL_RENDER_API@
+
+#cmakedefine TRL_USING_DX11
+#cmakedefine TRL_USING_OPENGL
+#cmakedefine TRL_USING_OPENGLES
+
+
+// Runtime Check
+
+#define TOY_XWINDOW_MORE_RUNTIME_CHECK @TOY_XWINDOW_MORE_RUNTIME_CHECK@
