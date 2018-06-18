@@ -13,13 +13,19 @@ class BaseWindow : public IWindow
 public:
     BaseWindow()
         :
-        m_ShouldClose(false)
+        m_ShouldClose(false),
+        m_Windowed(true)
     {}
 
 
-protected:
-    bool m_ShouldClose;
+private:
+    bool                            m_Windowed; // windowed-mode window
+    bool                            m_ShouldClose;
 
+    ToyUtility::String              m_Title;
+
+
+protected:
     // Callbacks
     ShouldCloseFunc                 m_ShouldCloseCb;
     WindowSizeFunc                  m_WindowSizeCb;
@@ -38,8 +44,12 @@ protected:
 
 
 public:
+    virtual bool Create(const WINDOW_DESC& desc) override;
+    virtual bool IsWindowed() const override;
     virtual bool ShouldClose() override;
     virtual void SetShouldClose(bool b) override;
+    virtual const ToyUtility::String & GetTitle() const override;
+    virtual void SetTitle(const ToyUtility::String & title) override;
 
     // Set Callback function impl
     virtual void SetShouldCloseCallback(ShouldCloseFunc callback) override;

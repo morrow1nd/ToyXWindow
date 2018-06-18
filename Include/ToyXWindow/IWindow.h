@@ -76,6 +76,9 @@ public:
     //////////////////////////////////////////////////////////////////////////////////
     // Window
 
+    // Is windowed-mode window
+    virtual bool IsWindowed() const = 0;
+
     // When the user attempts to close the window, for example by clicking the close widget
     // or using a key chord like Alt + F4, the close flag of the window is set.
     virtual bool ShouldClose() = 0;
@@ -128,7 +131,7 @@ public:
 
     virtual void SetPosCallback(PosFunc callback) = 0;
 
-    virtual void GetPos(int32* xpos, int32* pos) = 0;
+    virtual void GetPos(int32* xpos, int32* ypos) = 0;
 
     // Get window title
     virtual const ToyUtility::String& GetTitle() const = 0;
@@ -136,6 +139,8 @@ public:
     virtual void SetTitle(const ToyUtility::String& title) = 0;
 
     // TODOL: Window icon
+
+    // TODOM: MaximizeWindow see glfw:win32_window.c:L1224, L1347
 
     // TODOM: Window monitor
 
@@ -187,7 +192,8 @@ public:
     //////////////////////////////////////////////////////////////////////////////////
     // Keyboard
     
-    // The scancode is unique for every key, regardless of whether it has a key token. Scancodes are platform-specific but consistent over time.
+    // The scancode is unique for every key, regardless of whether it has a key token. Scancodes are
+    // platform-specific but consistent over time.
     virtual void SetKeyCallback(KeyFunc callback) = 0;
 
     virtual ButtonState GetKey(KeyType key) = 0;
@@ -202,6 +208,8 @@ public:
     virtual void GetCursorPos(float* xpos, float* ypos) = 0;
 
     virtual void SetCursorPosCallback(CursorPosFunc callback) = 0;
+
+    virtual void SetCursorPos(float xpos, float ypos) = 0;
 
     virtual void GetCursorPosDelta(float* xdelta, float* ydelta) = 0;
 

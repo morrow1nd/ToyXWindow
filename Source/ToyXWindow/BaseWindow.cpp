@@ -5,6 +5,18 @@ namespace ToyXWindow
 {
 
 
+bool BaseWindow::Create(const WINDOW_DESC & desc)
+{
+    m_Windowed = desc.Windowed;
+
+    return true;
+}
+
+bool BaseWindow::IsWindowed() const
+{
+    return m_Windowed;
+}
+
 bool BaseWindow::ShouldClose()
 {
     return m_ShouldClose;
@@ -18,6 +30,16 @@ void BaseWindow::SetShouldClose(bool b)
     {
         OnRecvMsg_ShouldClose();
     }
+}
+
+const ToyUtility::String & BaseWindow::GetTitle() const
+{
+    return m_Title;
+}
+
+void BaseWindow::SetTitle(const ToyUtility::String & title)
+{
+    m_Title = title;
 }
 
 void BaseWindow::SetShouldCloseCallback(ShouldCloseFunc callback)

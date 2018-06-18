@@ -40,7 +40,6 @@ public:
     virtual void SetAspectRatio(uint32 width, uint32 height) override;
     virtual void SetPos(int32 xpos, int32 ypos) override;
     virtual void GetPos(int32 * xpos, int32 * pos) override;
-    virtual const ToyUtility::String & GetTitle() const override;
     virtual void SetTitle(const ToyUtility::String & title) override;
     virtual void Iconify() override;
     virtual void Restore() override;
@@ -54,6 +53,7 @@ public:
     virtual ButtonState GetKey(KeyType key) override;
     virtual const ToyUtility::String & GetKeyName(KeyType key) const override;
     virtual void GetCursorPos(float * xpos, float * ypos) override;
+    virtual void SetCursorPos(float xpos, float ypos) override;
     virtual void GetCursorPosDelta(float * xdelta, float * ydelta) override;
     virtual void SetCursorMode(CursorMode mode) override;
     virtual CursorMode GetCursorMode() override;
