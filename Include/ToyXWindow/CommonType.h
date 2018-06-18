@@ -2,10 +2,24 @@
 
 #include <functional>
 #include "ToyUtility/Prerequisites/PreDefine.h"
+#include "ToyUtility/String/String.h"
+#include "ToyUtility/Math/Rect2I.h"
+#include "ToyUtility/Math/Rational.h"
+#include "ToyXWindowConfig.h"
 
 
 namespace ToyXWindow
 {
+
+
+using ToyUtility::uint8;
+using ToyUtility::int8;
+using ToyUtility::uint16;
+using ToyUtility::int16;
+using ToyUtility::uint32;
+using ToyUtility::int32;
+using ToyUtility::uint64;
+using ToyUtility::int64;
 
 
 enum class KeyType
@@ -139,10 +153,17 @@ enum class KeyType
 
 enum class ModifierKeyType
 {
-    Shift,
-    Control,
-    Alt,
-    Super,
+    Shift       = 1 << 0,
+    Control     = 1 << 1,
+    Alt         = 1 << 2,
+    Super       = 1 << 3,
+};
+
+enum class KeyAction
+{
+    Press,
+    Release,
+    R // TODOH
 };
 
 enum class CursorMode
@@ -156,7 +177,7 @@ enum class ButtonState
 {
     Press,
     Release,
-    R
+    R // TODOH
 };
 
 enum class MouseButtonType
@@ -164,6 +185,101 @@ enum class MouseButtonType
     Left,
     Right,
     Middle
+};
+
+enum class WindowContextNativeApiType
+{
+    Win_DX11,
+    Win_WGL,
+
+    MacOS_CGL,
+
+    Linux_EGL,
+    
+    Android_EGL,
+};
+
+struct XWINDOW_API_STARTUP_DESC
+{
+    WindowContextNativeApiType WindowContextNativeApi;
+};
+
+struct ScrollDesc
+{
+    ScrollDesc()
+        :
+        IsMouse(true)
+    {}
+
+
+    bool IsMouse;
+    union
+    {
+        struct
+        {
+            float XOffset, YOffset;
+        } NormalScroll;
+        struct
+        {
+            ToyUtility::int32 XOffset, YOffset;
+        } MouseScroll;
+    } Scroll;
+};
+
+struct SampleDesc
+{
+    static SampleDesc NoMultiSampling;
+
+    SampleDesc()
+        :
+        Count(1),
+        Quality(0)
+    {}
+
+    SampleDesc(ToyUtility::uint32 count, ToyUtility::uint32 quality)
+        :
+        Count(count),
+        Quality(quality)
+    {}
+
+
+    ToyUtility::uint32 Count; // The number of multisamples per pixel
+    ToyUtility::uint32 Quality; // The image quality level. The higher the quality, the lower the performance
+};
+
+struct ModeDesc
+{
+    ModeDesc()
+        :
+        Width(0),
+        Height(0)
+    {}
+
+
+    ToyUtility::uint32 Width; // resolution width
+    ToyUtility::uint32 Height; // resolution height
+    ToyUtility::Rational RefreshRate; // refresh rate in hertz
+    // TODOH: format, scanlineOrdering, scaling
+};
+
+struct WINDOW_DESC
+{
+    WINDOW_DESC()
+        :
+        Title(""),
+        Windowed(true),
+        BufferCount(1)
+    {
+    }
+
+
+    ToyUtility::String              Title;
+    ToyUtility::Rect2I              WindowRect;
+
+    bool                            Windowed; // Windowed mode
+    ModeDesc                        BufferDesc; // Describing the backbuffer display mode
+    SampleDesc                      SampleDesc; // describing multi-sampling 
+    ToyUtility::uint32              BufferCount; // Back buffer count
 };
 
 

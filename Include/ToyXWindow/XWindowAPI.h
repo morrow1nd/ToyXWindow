@@ -1,18 +1,23 @@
 #pragma once
 
 #include "ToyUtility/Prerequisites/PreDefine.h"
-#include "ToyXWindow/IWindow.h"
+#include "ToyXWindow/PlatformXWindow.h"
 
 
 namespace ToyXWindow
 {
 
+
 // It provides a platform independent API for creating windows, contexts,
 // getting keyboard, mouse, touch event, handling clipboard, path drop input and so on.
-class XWindowAPI
+class XWindowAPI : public ToyUtility::ISingleton<XWindowAPI>
 {
 public:
-    void StartUp();
+    ////////////////////////////////////////////////////////////////////////////////////
+    // Init
+
+    bool StartUp(const XWINDOW_API_STARTUP_DESC& desc);
+
     void ShutDown();
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -33,18 +38,24 @@ public:
 
     void WaitEventsTimeout(float time);
 
-    // If the main thread is sleeping in glfwWaitEvents, you can wake it from another thread by posting
-    // an empty event to the event queue with glfwPostEmptyEvent.
+    // If the main thread is sleeping in WaitEvents, you can wake it from another thread by posting
+    // an empty event to the event queue with PostEmptyEvent.
     void PostEmptyEvent();
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Adapter and window
 
-    void GetDefaultAdapter();
-    void GetAdapters();
+    ToyUtility::SPtr<IAdapter> GetDefaultAdapter();
 
-    void CreateWindow();
-    void GetAllWindows();
+    const ToyUtility::List<ToyUtility::SPtr<IAdapter>>& GetAdapters() const;
+
+    ToyUtility::SPtr<IWindow> CreateWindow(const WINDOW_DESC& desc);
+
+    void SetMainWindow(ToyUtility::SPtr<IWindow> window);
+
+
+private:
+    PlatformXWindow m_PlatformImpl;
 };
 
 
