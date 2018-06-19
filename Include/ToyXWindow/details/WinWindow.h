@@ -13,24 +13,47 @@ namespace ToyXWindow
 class WinWindow : public BaseWindow
 {
 public:
+    static ToyUtility::String HWNDGetPropName;
+
+
+public:
     WinWindow()
         :
-        m_HWND(0)
+        m_HWNDCreated(false)
     {}
 
 
-private:
-    HWND                            m_HWND;
+protected:
     ToyUtility::String              m_ClassName;
+    HINSTANCE                       m_ProgramInstance;
+    bool                            m_HWNDCreated;
+    HWND                            m_HWND;
     WINDOW_DESC                     m_Desc;
 
 
 public:
-    void SetClassName(const ToyUtility::String& className);
+    int                             m_LastCursorPosX;
+    int                             m_LastCursorPosY;
+    int                             m_CursorTracked;
+    int                             m_Iconified;
+    ToyUtility::Rational            m_AspectRatioLimit;
 
 
 public:
-    virtual bool Create(const WINDOW_DESC& desc) override;
+    void SetClassName(const ToyUtility::String& className);
+    void SetProgramInstance(HINSTANCE h) { m_ProgramInstance = h; }
+    HWND GetHWND() const { return m_HWND; }
+
+
+protected:
+    // Init dx11 or wgl context in WinDX11Window or WinWGLWindow
+    virtual ToyXResult InitContext() = 0;
+    virtual void DeInitContext() = 0;
+
+
+public:
+    // override BaseWindow
+    virtual ToyXResult Create(const WINDOW_DESC& desc) override;
     virtual void Destory() override;
     virtual void GetWindowSize(uint32 * width, uint32 * height) override;
     virtual void SetWindowSize(uint32 width, uint32 height) override;
@@ -49,7 +72,6 @@ public:
     virtual bool IsVisible() override;
     virtual void Focus() override;
     virtual bool IsFocused() override;
-    virtual void PresentBackBuffer(uint32 syncInterval) override;
     virtual ButtonState GetKey(KeyType key) override;
     virtual const ToyUtility::String & GetKeyName(KeyType key) const override;
     virtual void GetCursorPos(float * xpos, float * ypos) override;

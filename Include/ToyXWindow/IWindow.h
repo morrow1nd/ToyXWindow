@@ -34,10 +34,10 @@ using HWindow = IWindow*;
 #define CursorPosFuncParaList xpos, ypos
 #define CursorPosDeltaFuncArguList float xdelta, float ydelta
 #define CursorPosDeltaFuncParaList xdelta, ydelta
-#define CursorEnterLeaveFuncArguList bool entered
-#define CursorEnterLeaveFuncParaList entered
-#define MouseButtonFuncArguList MouseButtonType button, KeyAction keyAction, int modifiers
-#define MouseButtonFuncParaList button, keyAction, modifiers
+#define CursorEnterLeaveFuncArguList bool isEnter
+#define CursorEnterLeaveFuncParaList isEnter
+#define MouseButtonFuncArguList MouseButtonType button, KeyAction action, int modifiers
+#define MouseButtonFuncParaList button, action, modifiers
 #define ScrollFuncArguList const ScrollDesc& scroll
 #define ScrollFuncParaList scroll
 #define DropFuncArguList int count, const char** texts
@@ -69,7 +69,7 @@ public:
     //////////////////////////////////////////////////////////////////////////////////
     // Init
 
-    virtual bool Create(const WINDOW_DESC& desc) = 0;
+    virtual ToyXResult Create(const WINDOW_DESC& desc) = 0;
 
     virtual void Destory() = 0;
 

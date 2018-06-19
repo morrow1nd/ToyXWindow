@@ -1,7 +1,12 @@
 #pragma once
 
 #include "ToyUtility/Prerequisites/PreDefine.h"
-#include "ToyXWindow/PlatformXWindow.h"
+#include "ToyUtility/DesignPattern/ISingleton.h"
+#include "ToyUtility/Memory/SmartPtr.h"
+#include "ToyXWindow/CommonType.h"
+#include "ToyXWindow/IAdapter.h"
+#include "ToyXWindow/IWindow.h"
+#include "ToyXWindow/details/XWindowImpl.h"
 
 
 namespace ToyXWindow
@@ -16,7 +21,7 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////
     // Init
 
-    bool StartUp(const XWINDOW_API_STARTUP_DESC& desc);
+    ToyXResult StartUp(const XWINDOW_API_STARTUP_DESC& desc);
 
     void ShutDown();
 
@@ -55,7 +60,7 @@ public:
 
 
 private:
-    PlatformXWindow m_PlatformImpl;
+    ToyUtility::SPtr<XWindowImpl> m_PlatformImpl;
 };
 
 

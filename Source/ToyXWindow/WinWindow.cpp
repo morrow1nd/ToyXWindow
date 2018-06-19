@@ -9,39 +9,56 @@ namespace ToyXWindow
 #define getWindowStyle_     WS_CLIPSIBLINGS | WS_CLIPCHILDREN
 #define getWindowExStyle_   WS_EX_APPWINDOW
 
+
+ToyUtility::String WinWindow::HWNDGetPropName = "ToyXWindow";
+
+
 void WinWindow::SetClassName(const ToyUtility::String & className)
 {
     m_ClassName = className;
 }
 
-bool WinWindow::Create(const WINDOW_DESC& desc)
+ToyXResult WinWindow::Create(const WINDOW_DESC& desc)
 {
-    if(BaseWindow::Create(desc) == false)
-        return false;
+    TOYXRESULT_RETURN_IF_FAIL(BaseWindow::Create(desc));
 
     m_Desc = desc;
 
     // Create window
-    RECT rc = {desc.WindowRect.x, desc.WindowRect.y, desc.WindowRect.width, desc.WindowRect.height};
+    RECT rc = {desc.WindowRect.x, desc.WindowRect.y, (LONG)desc.WindowRect.width, (LONG)desc.WindowRect.height};
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-    m_HWND = CreateWindow(m_ClassName.c_str(), desc.Title.c_str(), WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, GetModuleHandle(NULL),
+    m_HWND = CreateWindowA(
+        m_ClassName.c_str(),
+        desc.Title.c_str(),
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT,
+        CW_USEDEFAULT,
+        rc.right - rc.left,
+        rc.bottom - rc.top,
+        NULL,
+        NULL,
+        m_ProgramInstance,
         NULL);
     if (!m_HWND)
-        return false;
+    {
+        // auto error = GetLastError();
+        return ToyXResult::Error_Win_CreateWindowA_Fail;
+    }
 
-    SetProp(m_HWND, "ToyXW", this);
+    SetPropA(m_HWND, HWNDGetPropName.c_str(), this);
+
+    m_HWNDCreated = true;
 
     Show();
 
-    // TODOH: create context: dx11, wgl
+    TOYXRESULT_RETURN_IF_FAIL(InitContext()); // TODOH: if failed, release m_HWND
 
-    return true;
+    return ToyXResult::Success;
 }
 
 void WinWindow::Destory()
 {
-    // TODOH
+    // TODOH DestoryWindow
 }
 
 void WinWindow::GetWindowSize(uint32 * width, uint32 * height)
@@ -59,7 +76,7 @@ void WinWindow::SetWindowSize(uint32 width, uint32 height)
 {
     if (IsWindowed())
     {
-        RECT rect = {0, 0, width, height};
+        RECT rect = {0, 0, (LONG)width, (LONG)height};
         AdjustWindowRectEx(&rect, getWindowStyle_,
             FALSE, getWindowExStyle_);
         SetWindowPos(m_HWND, HWND_TOP,
@@ -173,11 +190,6 @@ bool WinWindow::IsFocused()
     return m_HWND == GetActiveWindow();
 }
 
-void WinWindow::PresentBackBuffer(uint32 syncInterval)
-{
-    // TODOH
-}
-
 ButtonState WinWindow::GetKey(KeyType key)
 {
     return ButtonState();
@@ -206,7 +218,7 @@ const ToyUtility::String & WinWindow::GetKeyName(KeyType key) const
 
     //return _glfw.win32.keyName;
     // TODOM
-    return "";
+    throw "unachieved";
 }
 
 void WinWindow::GetCursorPos(float * xpos, float * ypos)
@@ -218,9 +230,9 @@ void WinWindow::GetCursorPos(float * xpos, float * ypos)
         ScreenToClient(m_HWND, &pos);
 
         if (xpos)
-            *xpos = pos.x;
+            *xpos = (float)pos.x;
         if (ypos)
-            *ypos = pos.y;
+            *ypos = (float)pos.y;
     }
 }
 
@@ -234,7 +246,7 @@ void WinWindow::SetCursorPos(float xpos, float ypos)
     //window->win32.lastCursorPosY = pos.y;
 
     ClientToScreen(m_HWND, &pos);
-    SetCursorPos(pos.x, pos.y);
+    SetCursorPos((float)pos.x, (float)pos.y);
 
     OnRecvMsg_CursorPos(xpos, ypos); // TODOH: need this? Or do the system emit win event to WndProc?
 }
@@ -278,19 +290,19 @@ CursorMode WinWindow::GetCursorMode()
 ButtonState WinWindow::GetMouseButton(MouseButtonType type)
 {
     // TODOH
+    return ButtonState();
 }
 
 const ToyUtility::String & WinWindow::GetClipboardString() const
 {
     // TODOM
-    assert(false);
-    return "";
+    throw "unachieved";
 }
 
 void WinWindow::SetClipboardString(const ToyUtility::String & text)
 {
     // TODOM
-    assert(false);
+    throw "unachieved";
 }
 
 

@@ -24,6 +24,11 @@ private:
 
     ToyUtility::String              m_Title;
 
+    char                            m_Keys[(int) KeyType::__End];
+    char                            m_MouseButtons[(int) MouseButtonType::__End];
+    float                           m_VirtualCursorPosX;
+    float                           m_VirtualCursorPosY;
+
 
 protected:
     // Callbacks
@@ -44,7 +49,7 @@ protected:
 
 
 public:
-    virtual bool Create(const WINDOW_DESC& desc) override;
+    virtual ToyXResult Create(const WINDOW_DESC& desc) override;
     virtual bool IsWindowed() const override;
     virtual bool ShouldClose() override;
     virtual void SetShouldClose(bool b) override;
@@ -70,7 +75,7 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////
     // Handle messages (OnRecvMsg)
-protected:
+public:
     virtual void OnRecvMsg_ShouldClose(ShouldCloseFuncArguList);
     virtual void OnRecvMsg_WindowSize(WindowSizeFuncArguList);
     virtual void OnRecvMsg_FrameBufferSize(FrameBufferSizeFuncArguList);

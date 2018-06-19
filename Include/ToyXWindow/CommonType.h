@@ -12,6 +12,31 @@ namespace ToyXWindow
 {
 
 
+enum class ToyXResult
+{
+    Success = 0,
+
+    Error_XWindowImpl_FactoryCreate_Fail,
+
+    Error_Win_RegisterWindowsWindowClass_Fail,
+    Error_WinDX11_CreateDXGIFactory_Fail,
+    Error_WinDX11_D3D11CreateDevice_Fail,
+    Error_Win_CreateWindowA_Fail,
+    Error_WinDX11_Factory_CreateSwapChain_Fail,
+    Error_WinDX11_SwapChain_GetBuffer_Fail,
+    Error_WinDX11_Device_CreateRenderTargetView_Fail,
+    Error_WinDX11_Device_CreateTexture2D_Fail,
+    Error_WinDX11_Device_CreateDepthStencilView_Fail,
+};
+
+#define TOYXRESULT_RETURN_IF_FAIL(value)                \
+{                                                       \
+    ToyXResult result = (value); /* call only once */   \
+    if ((result) != ToyXResult::Success)                \
+        return result;                                  \
+}
+
+
 using ToyUtility::uint8;
 using ToyUtility::int8;
 using ToyUtility::uint16;
@@ -24,7 +49,10 @@ using ToyUtility::int64;
 
 enum class KeyType
 {
-    Unknown = -1,
+    __Invalid = -2,
+    __Unknown = -1,
+    
+    __Begin = 0,
 
     // Printable key
     Space                   = 32,
@@ -74,7 +102,7 @@ enum class KeyType
     LeftBracket             = 91, // [
     BackSlash               = 92, // \ 
     RightBracket            = 93, // ]
-    GraveAccent             = 96, // `
+    GraveAccent             = 96, // ` 
 
     // Function keys
     Escape                  = 256,
@@ -149,6 +177,8 @@ enum class KeyType
     Keypad_Add,
     Keypad_Enter,
     Keypad_Equal,
+
+    __End,
 };
 
 enum class ModifierKeyType
@@ -182,9 +212,15 @@ enum class ButtonState
 
 enum class MouseButtonType
 {
+    __Begin,
+
     Left,
     Right,
-    Middle
+    Middle,
+    _4,
+    _5,
+
+    __End,
 };
 
 enum class WindowContextNativeApiType
@@ -281,6 +317,8 @@ struct WINDOW_DESC
     SampleDesc                      SampleDesc; // describing multi-sampling 
     ToyUtility::uint32              BufferCount; // Back buffer count
 };
+
+const int XWINDOW_DONT_CARE = 0;
 
 
 } // end of namespace ToyXWindow

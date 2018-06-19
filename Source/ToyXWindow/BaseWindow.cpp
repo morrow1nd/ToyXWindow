@@ -5,11 +5,11 @@ namespace ToyXWindow
 {
 
 
-bool BaseWindow::Create(const WINDOW_DESC & desc)
+ToyXResult BaseWindow::Create(const WINDOW_DESC & desc)
 {
     m_Windowed = desc.Windowed;
 
-    return true;
+    return ToyXResult::Success;
 }
 
 bool BaseWindow::IsWindowed() const
@@ -160,6 +160,11 @@ void BaseWindow::OnRecvMsg_Focus(FocusFuncArguList)
     {
         m_FocusCb(this, FocusFuncParaList);
     }
+
+    if (focused == false)
+    {
+        // TODOH: release all pressed keys and mouse buttons see glfw:window.c:L56
+    }
 }
 
 void BaseWindow::OnRecvMsg_WindowNeedRefresh(WindowNeedRefreshFuncArguList)
@@ -172,6 +177,26 @@ void BaseWindow::OnRecvMsg_WindowNeedRefresh(WindowNeedRefreshFuncArguList)
 
 void BaseWindow::OnRecvMsg_Key(KeyFuncArguList)
 {
+    if (key > KeyType::__Begin && key < KeyType::__End)
+    {
+        bool repeated = false;
+
+        if(action == KeyAction::Release && m_Keys[(int)key] == (char) KeyAction::Release)
+            return;
+
+        if(action == KeyAction::Press && m_Keys[(int)key] == (char)KeyAction::Press)
+            repeated = true;
+
+        // TODOH
+        //if(action == KeyAction::Release && m_stickyKeys)
+        //    m_Keys[(int)key] = _GLFW_STICK;
+        //else
+            m_Keys[(int)key] = (char)action;
+
+        //if(repeated)
+        //    action = GLFW_REPEAT;
+    }
+
     if (m_KeyCb)
     {
         m_KeyCb(this, KeyFuncParaList);
@@ -180,6 +205,12 @@ void BaseWindow::OnRecvMsg_Key(KeyFuncArguList)
 
 void BaseWindow::OnRecvMsg_CursorPos(CursorPosFuncArguList)
 {
+    if(m_VirtualCursorPosX == xpos && m_VirtualCursorPosY == ypos)
+        return;
+
+    m_VirtualCursorPosX = xpos;
+    m_VirtualCursorPosY = ypos;
+
     if (m_CursorPosCb)
     {
         m_CursorPosCb(this, CursorPosFuncParaList);
@@ -205,6 +236,15 @@ void BaseWindow::OnRecvMsg_CursorEnterLeave(CursorEnterLeaveFuncArguList)
 
 void BaseWindow::OnRecvMsg_MouseButton(MouseButtonFuncArguList)
 {
+    if (button > MouseButtonType::__Begin && button < MouseButtonType::__End)
+    {
+        // Register mouse button action
+        //if (action == GLFW_RELEASE && window->stickyMouseButtons)
+        //    window->mouseButtons[button] = _GLFW_STICK;
+        //else
+            m_MouseButtons[(int)button] = (char)action;
+    }
+
     if (m_MouseButtonCb)
     {
         m_MouseButtonCb(this, MouseButtonFuncParaList);
