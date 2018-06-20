@@ -444,15 +444,16 @@ struct ContextConfig
         :
         client(0),
         source(0),
-        major(2),
-        minor(0),
+        major(3),
+        minor(3),
         forward(0),
         debug(0),
         noerror(0),
-        profile(ProfileType::Any),
+        profile(ProfileType::OpenGL_Core),
         robustness(RobustnessType::None),
         release(ReleaseType::Any)
     {}
+
 
     int             client;
     int             source;
