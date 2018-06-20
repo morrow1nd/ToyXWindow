@@ -24,6 +24,7 @@ public:
 public:
     virtual ToyXResult StartUp(const XWINDOW_API_STARTUP_DESC& desc) = 0;
     virtual void ShutDown() = 0;
+    virtual void GetPlatformDependentData(PlatformDependentData& data) = 0;
 
     virtual void PollEvents() = 0;
     virtual void WaitEvents() = 0;

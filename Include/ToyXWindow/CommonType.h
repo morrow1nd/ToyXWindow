@@ -113,6 +113,57 @@ namespace ToyXWindow
 
 
 
+struct PlatformDependentData
+{
+    typedef void* (*WinWGLGetProcAddressFunc)(const char*);
+
+
+    union
+    {
+        struct
+        {
+            union
+            {
+                struct
+                {
+                    void* DXGIFactory; // IDXGIFactory*
+                    void* D3D11Device; // ID3D11Device*
+                    void* D3D11DeviceContext; // ID3D11DeviceContext*
+                    ToyUtility::uint64 FeatureLevel; // D3D_FEATURE_LEVEL
+                } WinDX11;
+
+                struct
+                {
+                    WinWGLGetProcAddressFunc GetProcAddressFuncPtr;
+                } WinWGL;
+            } _;
+
+            void* ProgramInstance; // HINSTANCE
+            void* MainWindowHWND; // HWND (only template)
+        } Windows;
+
+        struct
+        {
+
+        } Linux;
+    } _;
+
+    union
+    {
+        struct
+        {
+
+        } OpenGL;
+
+        struct
+        {
+
+        } DX11;
+    } _;
+
+
+
+};
 
 
 enum class ToyXResult

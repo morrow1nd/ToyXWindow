@@ -100,6 +100,16 @@ void WinDX11XWindowImpl::ShutDown()
     WinBaseXWindowImpl::ShutDown();
 }
 
+void WinDX11XWindowImpl::GetPlatformDependentData(PlatformDependentData & data)
+{
+    WinBaseXWindowImpl::GetPlatformDependentData(data);
+
+    data._.Windows._.WinDX11.DXGIFactory = m_Context.Factory;
+    data._.Windows._.WinDX11.D3D11Device = m_Context.Device;
+    data._.Windows._.WinDX11.D3D11DeviceContext = m_Context.DeviceContext;
+    data._.Windows._.WinDX11.FeatureLevel = m_Context.FeatureLevel;
+}
+
 ToyUtility::SPtr<IAdapter> WinDX11XWindowImpl::GetDefaultAdapter()
 {
     // TODOH

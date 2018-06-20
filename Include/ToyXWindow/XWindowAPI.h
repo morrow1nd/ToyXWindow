@@ -18,12 +18,16 @@ namespace ToyXWindow
 class XWindowAPI : public ToyUtility::ISingleton<XWindowAPI>
 {
 public:
+    XWindowAPI();
+
     ////////////////////////////////////////////////////////////////////////////////////
     // Init
 
     ToyXResult StartUp(const XWINDOW_API_STARTUP_DESC& desc);
 
     void ShutDown();
+
+    void GetPlatformDependentData(PlatformDependentData& data);
 
     ////////////////////////////////////////////////////////////////////////////////////
     // Event process
@@ -60,6 +64,7 @@ public:
 
 
 private:
+    bool m_StartUpSucc;
     ToyUtility::SPtr<XWindowImpl> m_PlatformImpl;
 };
 

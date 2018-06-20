@@ -37,6 +37,7 @@ private:
 public:
     virtual ToyXResult StartUp(const XWINDOW_API_STARTUP_DESC& desc) override;
     virtual void ShutDown() override;
+    virtual void GetPlatformDependentData(PlatformDependentData& data) override;
     virtual void PollEvents() override;
     virtual void WaitEvents() override;
     virtual void WaitEventsTimeout(float time) override;

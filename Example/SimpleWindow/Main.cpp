@@ -48,6 +48,8 @@ int main()
     while (window->ShouldClose() == false)
     {
         Sleep(33);
+
+        window->PresentBackBuffer(0);
         api.PollEvents();
     }
 

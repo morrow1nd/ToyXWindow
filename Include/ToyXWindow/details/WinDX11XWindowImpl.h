@@ -34,6 +34,7 @@ private:
 public:
     virtual ToyXResult StartUp(const XWINDOW_API_STARTUP_DESC & desc) override;
     virtual void ShutDown() override;
+    virtual void GetPlatformDependentData(PlatformDependentData& data) override;
     virtual ToyUtility::SPtr<IAdapter> GetDefaultAdapter() override;
     virtual const ToyUtility::List<ToyUtility::SPtr<IAdapter>>& GetAdapters() const override;
     virtual ToyUtility::SPtr<IWindow> CreateWindow(const WINDOW_DESC & desc) override;

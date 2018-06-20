@@ -465,6 +465,12 @@ void WinBaseXWindowImpl::ShutDown()
     _UnRegisterWindowsWindowClass();
 }
 
+void WinBaseXWindowImpl::GetPlatformDependentData(PlatformDependentData & data)
+{
+    data._.Windows.ProgramInstance = m_ProgramInstance;
+    data._.Windows.MainWindowHWND = m_MainWindow ? m_MainWindow->GetHWND() : 0;
+}
+
 void WinBaseXWindowImpl::PollEvents()
 {
     MSG msg;

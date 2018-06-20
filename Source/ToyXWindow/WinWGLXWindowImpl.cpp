@@ -187,6 +187,36 @@ void WinWGLXWindowImpl::ShutDown()
     WinBaseXWindowImpl::ShutDown();
 }
 
+
+WGLGETPROCADDRESS_T g_WinWGL__wglGetProcAddress = 0;
+HINSTANCE g_WinWGL__wglInstance = 0;
+
+static void* WinWGL_GetProcAddress(const char* procname)
+{
+    if (g_WinWGL__wglGetProcAddress)
+    {
+        auto proc = g_WinWGL__wglGetProcAddress(procname);
+        if(proc)
+            return proc;
+    }
+
+    if (g_WinWGL__wglInstance)
+    {
+        return GetProcAddress(g_WinWGL__wglInstance, procname);
+    }
+
+    return 0;
+}
+
+void WinWGLXWindowImpl::GetPlatformDependentData(PlatformDependentData & data)
+{
+    WinBaseXWindowImpl::GetPlatformDependentData(data);
+
+    g_WinWGL__wglInstance = m_Context.Opengl32Dll;
+    g_WinWGL__wglGetProcAddress = m_Context.wgl.wglGetProcAddress;
+    data._.Windows._.WinWGL.GetProcAddressFuncPtr = WinWGL_GetProcAddress;
+}
+
 ToyUtility::SPtr<IAdapter> WinWGLXWindowImpl::GetDefaultAdapter()
 {
     return ToyUtility::SPtr<IAdapter>();
