@@ -31,6 +31,10 @@ protected:
     virtual void DeInitContext() override;
 
 
+public:
+    void _MakeCurrentContext();
+
+
 private:
     const WinDX11Context& c_Context;
 

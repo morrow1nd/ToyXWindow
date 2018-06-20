@@ -1,6 +1,10 @@
 #include "ToyXWindow/details/WinBaseXWindowImpl.h"
 
 #include <windowsx.h>
+#include <Dbt.h>
+
+#include <initguid.h>
+DEFINE_GUID(GUID_DEVINTERFACE_HID, 0x4d1e55b2, 0xf16f, 0x11cf, 0x88, 0xcb, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30);
 
 
 namespace ToyXWindow
@@ -20,7 +24,41 @@ static LRESULT CALLBACK WinBaseXWindomImpl_WndProc(HWND hWnd, UINT uMsg,
 
     if (!window)
     {
-        // TODOH
+        // This is the message handling for the hidden helper window
+
+        // TODOM: handle these messages
+        switch (uMsg)
+        {
+        case WM_DEVICECHANGE:
+        {
+            if (wParam == DBT_DEVNODES_CHANGED)
+            {
+                //_glfwInputMonitorChange();
+                return TRUE;
+            }
+            else if (wParam == DBT_DEVICEARRIVAL)
+            {
+                DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*)lParam;
+                if (dbh)
+                {
+                    //if (dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                    //    _glfwDetectJoystickConnectionWin32();
+                }
+            }
+            else if (wParam == DBT_DEVICEREMOVECOMPLETE)
+            {
+                DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*)lParam;
+                if (dbh)
+                {
+                    //if (dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                    //    _glfwDetectJoystickDisconnectionWin32();
+                }
+            }
+
+            break;
+        }
+        }
+
         return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
 
@@ -408,16 +446,23 @@ ToyXResult WinBaseXWindowImpl::StartUp(const XWINDOW_API_STARTUP_DESC & desc)
 {
     m_ProgramInstance = GetModuleHandle(NULL);
 
+    _CreateKeycodeTables();
+
     if(_RegisterWindowsWindowClass() == false)
         return ToyXResult::Error_Win_RegisterWindowsWindowClass_Fail;
 
-    _CreateKeycodeTables();
+    // Creates a dummy window for behind-the-scenes work
+    TOYXRESULT_RETURN_IF_FAIL(_CreateHelperWindow());
+
+    // TODOM: see glfw:win32_init.c:L396
 
     return ToyXResult::Success;
 }
 
 void WinBaseXWindowImpl::ShutDown()
 {
+    _DestroyHelperWindow();
+    _UnRegisterWindowsWindowClass();
 }
 
 void WinBaseXWindowImpl::PollEvents()
@@ -498,6 +543,51 @@ bool WinBaseXWindowImpl::_RegisterWindowsWindowClass()
         return false;
 
     return true;
+}
+
+void WinBaseXWindowImpl::_UnRegisterWindowsWindowClass()
+{
+    UnregisterClass(WindowsWindowClassName.c_str(), GetProgramInstance());
+}
+
+ToyXResult WinBaseXWindowImpl::_CreateHelperWindow()
+{
+    m_HelperWindowHandle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
+        WindowsWindowClassName.c_str(),
+        "ToyXWindow helper window",
+        WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+        0, 0, 1, 1,
+        HWND_MESSAGE, NULL,
+        GetProgramInstance(),
+        NULL);
+    if (!m_HelperWindowHandle)
+    {
+        return ToyXResult::Error_Win_CreateHelperWindow_Fail;
+    }
+
+    // HACK: The first call to ShowWindow is ignored if the parent process
+    //       passed along a STARTUPINFO, so clear that flag with a no-op call
+    ShowWindow(m_HelperWindowHandle, SW_HIDE);
+
+    // Register for HID device notifications
+    {
+        DEV_BROADCAST_DEVICEINTERFACE dbi;
+        ZeroMemory(&dbi, sizeof(dbi));
+        dbi.dbcc_size = sizeof(dbi);
+        dbi.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+        dbi.dbcc_classguid = GUID_DEVINTERFACE_HID;
+
+        RegisterDeviceNotification(m_HelperWindowHandle,
+            (DEV_BROADCAST_HDR*)&dbi,
+            DEVICE_NOTIFY_WINDOW_HANDLE);
+    }
+
+    return ToyXResult::Success;
+}
+
+void WinBaseXWindowImpl::_DestroyHelperWindow()
+{
+    DestroyWindow(m_HelperWindowHandle);
 }
 
 void WinBaseXWindowImpl::_CreateKeycodeTables()

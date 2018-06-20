@@ -74,17 +74,7 @@ ToyXResult WinDX11Window::InitContext()
     if (FAILED(hr))
         return ToyXResult::Error_WinDX11_Device_CreateDepthStencilView_Fail;
 
-    c_Context.DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
-
-    // Setup the viewport
-    D3D11_VIEWPORT vp;
-    vp.Width = (FLOAT)m_Desc.BufferDesc.Width;
-    vp.Height = (FLOAT)m_Desc.BufferDesc.Height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    c_Context.DeviceContext->RSSetViewports(1, &vp);
+    _MakeCurrentContext();
 
     return ToyXResult::Success;
 }
@@ -111,6 +101,23 @@ void WinDX11Window::DeInitContext()
         m_SwapChain->Release();
         m_SwapChain = nullptr;
     }
+}
+
+void WinDX11Window::_MakeCurrentContext()
+{
+    // TODOH: this ?
+
+    c_Context.DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
+
+    // Setup the viewport
+    D3D11_VIEWPORT vp;
+    vp.Width = (FLOAT)m_Desc.BufferDesc.Width;
+    vp.Height = (FLOAT)m_Desc.BufferDesc.Height;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    vp.TopLeftX = 0;
+    vp.TopLeftY = 0;
+    c_Context.DeviceContext->RSSetViewports(1, &vp);
 }
 
 

@@ -20,10 +20,12 @@ SET(TOY_XWINDOW_INC_DETAILS
 
 ## Windows Platform
 SET(TOY_XWINDOW_INC_DETAILS_WINDOWS
+	"${TOY_XWINDOW_INCLUDE_DIR}/ToyXWindow/details/OpenGLCommonType.h"
 	"${TOY_XWINDOW_INCLUDE_DIR}/ToyXWindow/details/WinBaseXWindowImpl.h"
 	"${TOY_XWINDOW_INCLUDE_DIR}/ToyXWindow/details/WinDX11CommonType.h"
     "${TOY_XWINDOW_INCLUDE_DIR}/ToyXWindow/details/WinDX11Window.h"
 	"${TOY_XWINDOW_INCLUDE_DIR}/ToyXWindow/details/WinDX11XWindowImpl.h"
+    "${TOY_XWINDOW_INCLUDE_DIR}/ToyXWindow/details/WinWGLCommonType.h"
     "${TOY_XWINDOW_INCLUDE_DIR}/ToyXWindow/details/WinWGLWindow.h"
 	"${TOY_XWINDOW_INCLUDE_DIR}/ToyXWindow/details/WinWGLXWindowImpl.h"
     "${TOY_XWINDOW_INCLUDE_DIR}/ToyXWindow/details/WinWindow.h"

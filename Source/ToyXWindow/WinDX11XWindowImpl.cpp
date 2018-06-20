@@ -115,7 +115,7 @@ const ToyUtility::List<ToyUtility::SPtr<IAdapter>>& WinDX11XWindowImpl::GetAdapt
 
 ToyUtility::SPtr<IWindow> WinDX11XWindowImpl::CreateWindow(const WINDOW_DESC & desc)
 {
-    ToyUtility::SPtr<WinDX11Window> window = ToyUtility::SPtr<WinDX11Window>(new WinDX11Window(m_Context));
+    ToyUtility::SPtr<WinDX11Window> window = std::make_shared<WinDX11Window>(m_Context);
 
     window->SetClassName(WindowsWindowClassName);
     window->SetProgramInstance(m_Context.ProgramInstance);
@@ -138,6 +138,8 @@ void WinDX11XWindowImpl::SetMainWindow(ToyUtility::SPtr<IWindow> window)
     WinBaseXWindowImpl::SetMainWindow(window);
 
     m_MainWindow = std::dynamic_pointer_cast<WinDX11Window>(window);
+
+    m_MainWindow->_MakeCurrentContext();
 }
 
 

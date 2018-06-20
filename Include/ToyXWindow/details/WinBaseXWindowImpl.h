@@ -13,8 +13,25 @@ namespace ToyXWindow
 
 class WinBaseXWindowImpl : public XWindowImpl
 {
+public:
+    // Create key code translation tables
+    static void _CreateKeycodeTables();
+
+    // Translates a Windows key to the corresponding ToyXWindow key
+    static KeyType _TranslateKey(WPARAM wParam, LPARAM lParam);
+
+    static KeyType NativeKeyToPublicKey(int32 scancode);
+    static int32 PublicKeyToNativeKey(KeyType key);
+
+    static int GetKeyModifiers();
+
+
 protected:
     const ToyUtility::String WindowsWindowClassName = "ToyXWindowClass";
+
+private:
+    static ToyUtility::int16 m_PublicKeys[512];
+    static ToyUtility::int16 m_NativeKeys[(int)KeyType::__End];
 
 
 public:
@@ -31,28 +48,22 @@ public:
     HINSTANCE GetProgramInstance() { return m_ProgramInstance; }
 
 
+protected:
+    HWND GetHelperWindowHandle() { return m_HelperWindowHandle; }
+
+
 private:
     bool _RegisterWindowsWindowClass();
-
-    // Create key code translation tables
-    static void _CreateKeycodeTables();
-    
-public:
-    // Translates a Windows key to the corresponding ToyXWindow key
-    static KeyType _TranslateKey(WPARAM wParam, LPARAM lParam);
-
-    static KeyType NativeKeyToPublicKey(int32 scancode);
-    static int32 PublicKeyToNativeKey(KeyType key);
-
-    static int GetKeyModifiers();
+    void _UnRegisterWindowsWindowClass();
+    ToyXResult _CreateHelperWindow();
+    void _DestroyHelperWindow();
 
 
 private:
     ToyUtility::SPtr<WinWindow> m_MainWindow;
     HINSTANCE m_ProgramInstance;
 
-    static ToyUtility::int16 m_PublicKeys[512];
-    static ToyUtility::int16 m_NativeKeys[(int)KeyType::__End];
+    HWND m_HelperWindowHandle;
 };
 
 
