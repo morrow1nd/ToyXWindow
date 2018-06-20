@@ -118,51 +118,15 @@ struct PlatformDependentData
     typedef void* (*WinWGLGetProcAddressFunc)(const char*);
 
 
-    union
-    {
-        struct
-        {
-            union
-            {
-                struct
-                {
-                    void* DXGIFactory; // IDXGIFactory*
-                    void* D3D11Device; // ID3D11Device*
-                    void* D3D11DeviceContext; // ID3D11DeviceContext*
-                    ToyUtility::uint64 FeatureLevel; // D3D_FEATURE_LEVEL
-                } WinDX11;
+    void* DXGIFactory; // IDXGIFactory*
+    void* D3D11Device; // ID3D11Device*
+    void* D3D11DeviceContext; // ID3D11DeviceContext*
+    ToyUtility::uint64 DXGIFeatureLevel; // D3D_FEATURE_LEVEL
 
-                struct
-                {
-                    WinWGLGetProcAddressFunc GetProcAddressFuncPtr;
-                } WinWGL;
-            } _;
+    WinWGLGetProcAddressFunc GetProcAddressFuncPtr;
 
-            void* ProgramInstance; // HINSTANCE
-            void* MainWindowHWND; // HWND (only template)
-        } Windows;
-
-        struct
-        {
-
-        } Linux;
-    } _;
-
-    union
-    {
-        struct
-        {
-
-        } OpenGL;
-
-        struct
-        {
-
-        } DX11;
-    } _;
-
-
-
+    void* ProgramInstance; // HINSTANCE
+    void* MainWindowHWND; // HWND (only template)
 };
 
 
@@ -405,6 +369,8 @@ enum class WindowContextNativeApiType
 struct XWINDOW_API_STARTUP_DESC
 {
     WindowContextNativeApiType WindowContextNativeApi;
+
+    // TODOH: more configure options
 };
 
 struct ScrollDesc

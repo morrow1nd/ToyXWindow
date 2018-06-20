@@ -26,16 +26,16 @@ ToyUtility::SPtr<XWindowImpl> XWindowImpl::FactoryCreate(WindowContextNativeApiT
 #endif
 #if TOY_LINUX
     case WindowContextNativeApiType::Linux_EGL:
-
+#error No Linux XWindomImpl.
         break;
 #endif
 #if TOY_MACOS
     case WindowContextNativeApiType::MacOS_CGL:
-
+#error No MacOS XWindowImpl.
         break;
 #endif
     default:
-        assert(false); // TODOH
+        assert(false && "XWindowImpl::FactoryCreate: can't create this type in current platform");
         break;
     }
 
