@@ -46,7 +46,6 @@ int main()
     });
     
     while (window->ShouldClose() == false)
-    //while(true)
     {
         Sleep(33);
         api.PollEvents();

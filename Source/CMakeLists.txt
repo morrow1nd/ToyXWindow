@@ -28,14 +28,18 @@ CONFIGURE_FILE(
     "${PROJECT_BINARY_DIR}/ToyXWindowConfig.h"
 )
 
+
+## load ToyUtility project
 ADD_SUBDIRECTORY(${OPTION_TOY_UTILITY_PATH} ToyUtility.out)
-INCLUDE_DIRECTORIES(${TOY_UTILITY_INCLUDE_PATHS})
+
 
 # Source files and their filters
 INCLUDE(CMakeSources.cmake)
 
 
 INCLUDE_DIRECTORIES(
+    ${TOY_UTILITY_INCLUDE_PATHS}
+
     ${TOY_XWINDOW_INCLUDE_DIR}
     ${PROJECT_BINARY_DIR}
 )
