@@ -46,6 +46,8 @@ void XWindowAPI::GetPlatformDependentData(PlatformDependentData & data)
     if(!m_StartUpSucc)
         return;
 
+    memset(&data, 0, sizeof(PlatformDependentData));
+
     m_PlatformImpl->GetPlatformDependentData(data);
 }
 

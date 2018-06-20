@@ -214,7 +214,7 @@ void WinWGLXWindowImpl::GetPlatformDependentData(PlatformDependentData & data)
 
     g_WinWGL__wglInstance = m_Context.Opengl32Dll;
     g_WinWGL__wglGetProcAddress = m_Context.wgl.wglGetProcAddress;
-    data._.Windows._.WinWGL.GetProcAddressFuncPtr = WinWGL_GetProcAddress;
+    data.GetProcAddressFuncPtr = WinWGL_GetProcAddress;
 }
 
 ToyUtility::SPtr<IAdapter> WinWGLXWindowImpl::GetDefaultAdapter()
@@ -231,6 +231,9 @@ const ToyUtility::List<ToyUtility::SPtr<IAdapter>>& WinWGLXWindowImpl::GetAdapte
 ToyUtility::SPtr<IWindow> WinWGLXWindowImpl::CreateWindow(const WINDOW_DESC & desc)
 {
     ToyUtility::SPtr<WinWGLWindow> window = std::make_shared<WinWGLWindow>(m_Context);
+    
+    window->SetClassName(WindowsWindowClassName);
+    window->SetProgramInstance(GetProgramInstance());
 
     if (window->Create(desc) == ToyXResult::Success)
     {

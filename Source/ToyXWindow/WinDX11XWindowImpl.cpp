@@ -104,10 +104,10 @@ void WinDX11XWindowImpl::GetPlatformDependentData(PlatformDependentData & data)
 {
     WinBaseXWindowImpl::GetPlatformDependentData(data);
 
-    data._.Windows._.WinDX11.DXGIFactory = m_Context.Factory;
-    data._.Windows._.WinDX11.D3D11Device = m_Context.Device;
-    data._.Windows._.WinDX11.D3D11DeviceContext = m_Context.DeviceContext;
-    data._.Windows._.WinDX11.FeatureLevel = m_Context.FeatureLevel;
+    data.DXGIFactory = m_Context.Factory;
+    data.D3D11Device = m_Context.Device;
+    data.D3D11DeviceContext = m_Context.DeviceContext;
+    data.DXGIFeatureLevel = m_Context.FeatureLevel;
 }
 
 ToyUtility::SPtr<IAdapter> WinDX11XWindowImpl::GetDefaultAdapter()
@@ -128,7 +128,7 @@ ToyUtility::SPtr<IWindow> WinDX11XWindowImpl::CreateWindow(const WINDOW_DESC & d
     ToyUtility::SPtr<WinDX11Window> window = std::make_shared<WinDX11Window>(m_Context);
 
     window->SetClassName(WindowsWindowClassName);
-    window->SetProgramInstance(m_Context.ProgramInstance);
+    window->SetProgramInstance(GetProgramInstance());
 
     if (window->Create(desc) == ToyXResult::Success)
     {

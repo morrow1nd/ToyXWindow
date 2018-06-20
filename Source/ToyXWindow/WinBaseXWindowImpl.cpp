@@ -467,8 +467,8 @@ void WinBaseXWindowImpl::ShutDown()
 
 void WinBaseXWindowImpl::GetPlatformDependentData(PlatformDependentData & data)
 {
-    data._.Windows.ProgramInstance = m_ProgramInstance;
-    data._.Windows.MainWindowHWND = m_MainWindow ? m_MainWindow->GetHWND() : 0;
+    data.ProgramInstance = m_ProgramInstance;
+    data.MainWindowHWND = m_MainWindow ? m_MainWindow->GetHWND() : 0;
 }
 
 void WinBaseXWindowImpl::PollEvents()
